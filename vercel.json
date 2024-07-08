@@ -5,12 +5,6 @@
       "destination": "/index.html"
     }
   ],
-  "redirects": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://cdn-dev.preoday.com/:path*"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
