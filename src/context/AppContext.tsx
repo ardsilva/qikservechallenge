@@ -1,28 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useReducer, Dispatch, ReactNode } from 'react';
-import { Sections, Venue } from '../types';
+import React, { createContext, useContext, useReducer } from 'react';
+import { Action, AppContextType, AppProviderProps, State } from '../types';
 
-// Definindo o tipo para o children
-type AppProviderProps = {
-  children: ReactNode;
-};
 
-// Defina os tipos de estado e ação
-type State = {
-  menuItems: Sections[];
-  venue: Venue | undefined;
-};
-
-type Action = 
-  | { type: 'SET_MENU_ITEMS'; payload: Sections[] }
-  // | { type: 'ADD_TO_BASKET'; payload: Items }
-  | { type: 'SET_VENUE'; payload: Venue };
-
-// Defina o tipo do contexto
-type AppContextType = {
-  state: State;
-  dispatch: Dispatch<Action>;
-};
 
 // Crie o contexto
 const AppContext = createContext<AppContextType | undefined>(undefined);

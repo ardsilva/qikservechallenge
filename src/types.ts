@@ -1,6 +1,11 @@
-export type AvailabilityType = {
+import { Dispatch, ReactNode } from 'react';
+
+
+export const AvailabilityType = {
   "availableNow": "AVAILABLE_NOW",
 }
+
+type AvailabilityType = (typeof AvailabilityType)[keyof typeof AvailabilityType];
 
 export interface Commons {
   id: number;
@@ -36,7 +41,7 @@ export interface Items extends Commons {
   sku: string;
   modifiers?: Modifiers[];
   quantity: number;
-  category?: string
+  category: string | null;
 }
 
 export interface Sections extends Commons {
@@ -79,3 +84,25 @@ export interface Venue {
 export interface Cart extends Items {
   quantity: number,
 }
+
+// Definindo o tipo para o children
+export type AppProviderProps = {
+  children: ReactNode;
+};
+
+// Defina os tipos de estado e ação
+export type State = {
+  menuItems: Sections[];
+  venue: Venue | undefined;
+};
+
+export type Action = 
+  | { type: 'SET_MENU_ITEMS'; payload: Sections[] }
+  // | { type: 'ADD_TO_BASKET'; payload: Items }
+  | { type: 'SET_VENUE'; payload: Venue };
+
+// Defina o tipo do contexto
+export type AppContextType = {
+  state: State;
+  dispatch: Dispatch<Action>;
+};

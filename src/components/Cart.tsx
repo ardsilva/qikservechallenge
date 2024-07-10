@@ -1,43 +1,69 @@
-import { Items } from "@/types";
-import { Button } from "@/components/ui/button";
-import { MinusCircleIcon, PlusCircleIcon } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Items } from '@/types';
+
 
 interface CartProps {
   cart: Items[];
-  setCart: React.Dispatch<React.SetStateAction<Items[]>>;
+  state: { venue?: { currency?: string } };
+  addToCart: (item: Items) => void;
+  removeFromCart: (item: Items) => void;
+  subtotal: number;
+  total: number;
 }
 
-export function Cart({ cart, setCart }: CartProps){
-  function handleClearCart(){
-    setCart([]);
-  }
+export default function Cart({
+  cart,
+  state,
+  addToCart,
+  removeFromCart,
+  subtotal,
+  total
+}: CartProps) {
   return (
-    <div className="">
-        <div className="scroll-m-20 text-2xl font-semibold">Carrinho</div>
-        {cart.length > 0
-          ? (
-          <div>
-            <div key={Math.random()}> 
-            {
-              cart.map((cartItem: Items) => (
-                <div className="">
-                  <div key={cartItem.id}>{cartItem.name} <span>{cartItem.price}</span></div>
-                  <div className="flex flex-row gap-6">
-                    <PlusCircleIcon />
-                      {cartItem.quantity || 1}
-                    <MinusCircleIcon />
+    <div className="w-72 ml-8">
+      <Card>
+        <CardHeader className="bg-[#F8F9FA]">
+          <CardTitle>Carrinho</CardTitle>
+        </CardHeader>
+        {cart.length === 0 ? (
+          <CardContent>
+            <p>Seu carrinho está vazio</p>
+          </CardContent>
+        ) : (
+          <div className="space-y-4">
+            {cart.map(item => (
+              <CardContent key={item.id}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">{item.name}</h3>
+                    <p className="font-bold">{state.venue?.currency}{item.price?.toFixed(2)}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline" size="sm" onClick={() => removeFromCart(item)}>
+                      -
+                    </Button>
+                    <span>{item.quantity}</span>
+                    <Button variant="outline" size="sm" onClick={() => addToCart(item)}>
+                      +
+                    </Button>
                   </div>
                 </div>
-              ))
-            }
+              </CardContent>
+            ))}
+            <div>
+              <CardHeader className="bg-[#F8F9FA] border-b">
+                <CardTitle>Subtotal</CardTitle>
+                <p>{state.venue?.currency}{subtotal.toFixed(2)}</p>
+              </CardHeader>
+              <CardHeader className="bg-[#F8F9FA]">
+                <CardTitle>Total</CardTitle>
+                <p>{state.venue?.currency}{total.toFixed(2)}</p>
+              </CardHeader>
             </div>
-            <div>Subtotal: </div>
-            <div>Total: </div>
-            <Button onClick={handleClearCart}>Limpar carrinho</Button>
           </div>
-          )
-          : (<p className="text-sm text-muted-foreground">Seu carrinho esta vazio</p>)
-        }
-      </div>
-  )
+        )}
+      </Card>
+    </div>
+  );
 }

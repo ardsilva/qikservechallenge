@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'https://cdn-dev.preoday.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: (proxy, options) => {
+        configure: (proxy) => {
           proxy.on('proxyRes', (proxyRes, req, res) => {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -19,7 +19,7 @@ export default defineConfig({
       }
     }
   },
-  plugins: [react()],
+  plugins: [react(),],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
