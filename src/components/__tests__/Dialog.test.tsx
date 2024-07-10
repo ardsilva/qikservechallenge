@@ -6,6 +6,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Dialog from '@/components/Dialog';
 import { test, expect, vi } from 'vitest';
 import { AvailabilityType, Items } from '@/types';
+import { AppProvider } from '@/context/AppContext';
 
 const mockModifiers: Items = 
   {
@@ -42,7 +43,8 @@ test('Dialog renders correctly and handles actions', () => {
   const handleAddToCartMock = vi.fn();
 
   render(
-    <Dialog
+    <AppProvider>
+      <Dialog
       showDialog={true}
       setShowDialog={setShowDialogMock}
       modifiers={mockModifiers}
@@ -53,12 +55,13 @@ test('Dialog renders correctly and handles actions', () => {
       handleAddToCart={handleAddToCartMock}
       webSettings={mockWebSettings}
     />
+    </AppProvider>
   );
 
   const itemElement = screen.getByText(/Cheeseburger/i);
   expect(itemElement).toBeDefined();
 
-  const addButton = screen.getByText('Add to Cart');
+  const addButton = screen.getByText(/Add to order/i);
   fireEvent.click(addButton);
   expect(handleAddToCartMock).toHaveBeenCalled();
 });

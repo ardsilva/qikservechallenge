@@ -17,7 +17,7 @@ export default function Component() {
   const [meatQuantity, setMeatQuantity] = useState(1)
   const [modifiers, setModifiers] = useState<Items>();
   const [search, setSearch] = useState('');
-  const [selectedValue, setSelectedValue] = useState<string | undefined>();
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
@@ -46,29 +46,40 @@ export default function Component() {
   }
 
   const addToCart = (item: Items) => {
-    const existingItem = cart.find((i) => i.id === item.id)
-    if (existingItem) {
-      const updatedCart = cart.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
-      setCart(updatedCart)
-    } else {
-      setCart([...cart, { ...item }])
-    }
-    updateSubtotalAndTotal(cart);
-  }
-
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((i) => i.id === item.id);
+      let updatedCart;
+      
+      if (existingItem) {
+        updatedCart = prevCart.map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      } else {
+        updatedCart = [...prevCart, { ...item, quantity: 1 }];
+      }
+      
+      updateSubtotalAndTotal(updatedCart);
+      handleAddToCart();
+      return updatedCart;
+    });
+  };
+  
   const removeFromCart = (item: Items) => {
-    const updatedCart = cart
-      .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
-      .filter((i) => i.quantity > 0)
-    setCart(updatedCart)
-    updateSubtotalAndTotal(updatedCart);
-  }
-
+    setCart((prevCart) => {
+      const updatedCart = prevCart
+        .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
+        .filter((i) => i.quantity > 0);
+      
+      updateSubtotalAndTotal(updatedCart);
+      return updatedCart;
+    });
+  };
+  
   const updateSubtotalAndTotal = (cart: CartType[]) => {
-    const newSubtotal = cart.reduce((acc, item: Items) => acc + item.price * item.quantity, 0)
-    setSubtotal(newSubtotal)
-    setTotal(newSubtotal)
-  }
+    const newSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    setSubtotal(newSubtotal);
+    setTotal(newSubtotal); // Assumindo que total é igual a subtotal, ajuste se necessário
+  };
 
   const handleAddToCart = () => {
     setShowDialog(false)
@@ -128,7 +139,7 @@ export default function Component() {
         setSelectedValue={setSelectedValue}
         meatQuantity={meatQuantity}
         setMeatQuantity={setMeatQuantity}
-        handleAddToCart={handleAddToCart}
+        handleAddToCart={addToCart}
         webSettings={webSettings}
       />
     </div>

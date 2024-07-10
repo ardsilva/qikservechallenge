@@ -8,22 +8,25 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Items } from '@/types';
+import { Items, ModifiersItems } from '@/types';
+import { useState } from 'react';
+import { useAppContext } from '@/context/AppContext';
 
 
 interface DialogProps {
   showDialog: boolean;
   setShowDialog: (open: boolean) => void;
   modifiers: Items | undefined;
-  selectedValue: string | undefined;
+  selectedValue: string;
   setSelectedValue: (value: string) => void;
   meatQuantity: number;
   setMeatQuantity: (quantity: number) => void;
-  handleAddToCart: () => void;
+  handleAddToCart: (item: Items) => void;
   webSettings: { primaryColour: string };
 }
 
-export default function Dialog({ showDialog,
+export default function Dialog({ 
+  showDialog,
   setShowDialog,
   modifiers,
   selectedValue,
@@ -33,6 +36,26 @@ export default function Dialog({ showDialog,
   handleAddToCart,
   webSettings
 }: DialogProps) {
+  const { state } = useAppContext();
+  const currency:string | undefined = state.venue?.currency;
+  const [itemSelected, setItemSelected] = useState<ModifiersItems>();
+
+  function addOrder(handleAddToCart: (item: Items) => void, modifiers: Items): void {
+    const newItem: Items = {
+      ...modifiers,
+      quantity: meatQuantity,
+      price: (itemSelected?.price as number),
+    }
+    handleAddToCart(newItem);
+  }
+
+  function getPrice(modifierPrice: number | undefined, meatQuantity: number, currency: string){
+    if(modifierPrice && modifierPrice > 0) {
+      return `${currency}${modifierPrice * meatQuantity}`
+    }
+    return '';
+  }
+
   return (
     <DialogComponent open={showDialog} onOpenChange={setShowDialog}>
       <DialogContent className="sm:max-w-[350px]">
@@ -48,10 +71,10 @@ export default function Dialog({ showDialog,
               <RadioGroup
                 key={id}
                 value={selectedValue}
-                onValueChange={setSelectedValue}>
+                onValueChange={(value) => {setItemSelected(modifierItem); setSelectedValue(value);}}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={id} id={id} />
-                  <Label htmlFor={id}>{modifierItem.name} - {modifierItem.price}</Label>
+                  <Label htmlFor={id}>{modifierItem.name} - {currency}{modifierItem.price}</Label>
                 </div>
               </RadioGroup>
             );
@@ -62,7 +85,7 @@ export default function Dialog({ showDialog,
                 variant="outline"
                 size="sm"
                 onClick={() => setMeatQuantity(meatQuantity - 1)}
-                disabled={meatQuantity === 1}
+                disabled={itemSelected?.maxChoices === meatQuantity}
               >
                 -
               </Button>
@@ -70,14 +93,15 @@ export default function Dialog({ showDialog,
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setMeatQuantity(meatQuantity + 1)}>
+                onClick={() => setMeatQuantity(meatQuantity + 1)}
+                disabled={itemSelected?.maxChoices === meatQuantity}>
                 +
               </Button>
             </div>
           </div>
           <Button
             style={{ backgroundColor: webSettings.primaryColour }}
-            onClick={handleAddToCart}>Add to Cart</Button>
+            onClick={() => addOrder(handleAddToCart, (modifiers as Items))}>{`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}</Button>
         </div>
       </DialogContent>
     </DialogComponent>
