@@ -32,10 +32,6 @@ const mockModifiers: Items =
   
 };
 
-const mockWebSettings = {
-  primaryColour: 'blue',
-};
-
 test('Dialog renders correctly and handles actions', () => {
   const setShowDialogMock = vi.fn();
   const setSelectedValueMock = vi.fn();
@@ -53,7 +49,6 @@ test('Dialog renders correctly and handles actions', () => {
       meatQuantity={1}
       setMeatQuantity={setMeatQuantityMock}
       handleAddToCart={handleAddToCartMock}
-      webSettings={mockWebSettings}
     />
     </AppProvider>
   );

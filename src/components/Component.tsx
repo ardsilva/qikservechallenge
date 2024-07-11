@@ -14,7 +14,7 @@ export default function Component() {
   const [subtotal, setSubtotal] = useState(0)
   const [total, setTotal] = useState(0)
   const [showDialog, setShowDialog] = useState(false)
-  const [meatQuantity, setMeatQuantity] = useState(1)
+  const [meatQuantity, setMeatQuantity] = useState<number>(1)
   const [modifiers, setModifiers] = useState<Items>();
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState<string>('');
@@ -45,36 +45,52 @@ export default function Component() {
     }
   }
 
-  const addToCart = (item: Items) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((i) => i.id === item.id);
-      let updatedCart;
-      
-      if (existingItem) {
-        updatedCart = prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      } else {
-        updatedCart = [...prevCart, { ...item, quantity: 1 }];
-      }
-      
-      updateSubtotalAndTotal(updatedCart);
-      handleAddToCart();
-      return updatedCart;
-    });
+  const handleQuantity = (item: Items | number) => {
+    if (typeof item === 'number') {
+      setMeatQuantity(item);
+    } else {
+      return null;
+    }
+  }
+
+  const addToCart = (item: Items | number) => {
+    if (typeof item === 'number') {
+      return null;
+    } else {
+      setCart((prevCart) => {
+        const existingItem = prevCart.find((i) => i.id === item.id);
+        let updatedCart;
+
+        if (existingItem) {
+          updatedCart = prevCart.map((i) =>
+            i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          );
+        } else {
+          updatedCart = [...prevCart, { ...item, quantity: 1 }];
+        }
+
+        updateSubtotalAndTotal(updatedCart);
+        handleAddToCart();
+        return updatedCart;
+      });
+    }
   };
-  
-  const removeFromCart = (item: Items) => {
-    setCart((prevCart) => {
-      const updatedCart = prevCart
-        .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
-        .filter((i) => i.quantity > 0);
-      
-      updateSubtotalAndTotal(updatedCart);
-      return updatedCart;
-    });
+
+  const removeFromCart = (item: Items | number) => {
+    if (typeof item === 'number') {
+      return null;
+    } else {
+      setCart((prevCart) => {
+        const updatedCart = prevCart
+          .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
+          .filter((i) => i.quantity > 0);
+
+        updateSubtotalAndTotal(updatedCart);
+        return updatedCart;
+      });
+    }
   };
-  
+
   const updateSubtotalAndTotal = (cart: CartType[]) => {
     const newSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     setSubtotal(newSubtotal);
@@ -86,10 +102,10 @@ export default function Component() {
   }
 
   const webSettings = {
-    "backgroundColour": state.venue?.webSettings.backgroundColour || "",
-    "primaryColour": state.venue?.webSettings.primaryColour || "",
-    "primaryColourHover": state.venue?.webSettings.primaryColourHover || "",
-    "navBackgroundColour": state.venue?.webSettings.navBackgroundColour || ""
+    "backgroundColour": state.venue?.webSettings?.backgroundColour || "",
+    "primaryColour": state.venue?.webSettings?.primaryColour || "",
+    "primaryColourHover": state.venue?.webSettings?.primaryColourHover || "",
+    "navBackgroundColour": state.venue?.webSettings?.navBackgroundColour || ""
   }
 
   function getFiltered(items: Items[], search: string) {
@@ -138,9 +154,8 @@ export default function Component() {
         selectedValue={selectedValue}
         setSelectedValue={setSelectedValue}
         meatQuantity={meatQuantity}
-        setMeatQuantity={setMeatQuantity}
+        setMeatQuantity={handleQuantity}
         handleAddToCart={addToCart}
-        webSettings={webSettings}
       />
     </div>
   )

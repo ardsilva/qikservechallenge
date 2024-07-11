@@ -1,13 +1,14 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Items } from '@/types';
+import { Items, State } from '@/types';
+import { MinusIcon, PlusIcon } from 'lucide-react';
+import QuantityButton from './QuantityButton';
 
 
 interface CartProps {
   cart: Items[];
-  state: { venue?: { currency?: string } };
-  addToCart: (item: Items) => void;
-  removeFromCart: (item: Items) => void;
+  state: State;
+  addToCart: (arg0: Items | number) => void;
+  removeFromCart: (arg0: Items | number) => void;
   subtotal: number;
   total: number;
 }
@@ -20,6 +21,7 @@ export default function Cart({
   subtotal,
   total
 }: CartProps) {
+  const primaryColor = state.venue?.webSettings?.primaryColour || '#a2f';
   return (
     <div className="w-72 ml-8">
       <Card>
@@ -40,13 +42,19 @@ export default function Cart({
                     <p className="font-bold">{state.venue?.currency}{item.price?.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm" onClick={() => removeFromCart(item)}>
-                      -
-                    </Button>
+                    <QuantityButton
+                      primaryColor={primaryColor}
+                      handleClick={removeFromCart}
+                      icon={<MinusIcon />}
+                      item={item} 
+                      testId={'minus'}/>
                     <span>{item.quantity}</span>
-                    <Button variant="outline" size="sm" onClick={() => addToCart(item)}>
-                      +
-                    </Button>
+                    <QuantityButton
+                      primaryColor={primaryColor}
+                      handleClick={addToCart}
+                      icon={<PlusIcon />}
+                      item={item} 
+                      testId={'plus'}/>
                   </div>
                 </div>
               </CardContent>

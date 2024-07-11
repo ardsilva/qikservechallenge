@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Items, ModifiersItems } from '@/types';
 import { useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
+import QuantityButton from './QuantityButton';
+import { MinusIcon, PlusIcon } from 'lucide-react';
 
 
 interface DialogProps {
@@ -20,9 +22,8 @@ interface DialogProps {
   selectedValue: string;
   setSelectedValue: (value: string) => void;
   meatQuantity: number;
-  setMeatQuantity: (quantity: number) => void;
+  setMeatQuantity: (arg0: Items | number) => void;
   handleAddToCart: (item: Items) => void;
-  webSettings: { primaryColour: string };
 }
 
 export default function Dialog({ 
@@ -34,10 +35,12 @@ export default function Dialog({
   meatQuantity,
   setMeatQuantity,
   handleAddToCart,
-  webSettings
 }: DialogProps) {
   const { state } = useAppContext();
+
   const currency:string | undefined = state.venue?.currency;
+  const primaryColor:string | undefined = state.venue?.webSettings?.primaryColour;
+
   const [itemSelected, setItemSelected] = useState<ModifiersItems>();
 
   function addOrder(handleAddToCart: (item: Items) => void, modifiers: Items): void {
@@ -81,26 +84,25 @@ export default function Dialog({
           })}
           <div className="grid grid-cols-[1fr_auto] items-center gap-4">
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setMeatQuantity(meatQuantity - 1)}
+              <QuantityButton
+                handleClick={setMeatQuantity}
+                icon={<MinusIcon />}
+                item={meatQuantity - 1}
+                primaryColor={primaryColor}
                 disabled={itemSelected?.maxChoices === meatQuantity}
-              >
-                -
-              </Button>
+              />
               <span>{meatQuantity}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setMeatQuantity(meatQuantity + 1)}
-                disabled={itemSelected?.maxChoices === meatQuantity}>
-                +
-              </Button>
+              <QuantityButton
+                handleClick={setMeatQuantity}
+                icon={<PlusIcon />}
+                item={meatQuantity + 1}
+                primaryColor={primaryColor}
+                disabled={itemSelected?.maxChoices === meatQuantity}
+              />
             </div>
           </div>
           <Button
-            style={{ backgroundColor: webSettings.primaryColour }}
+            style={{ backgroundColor: primaryColor }}
             onClick={() => addOrder(handleAddToCart, (modifiers as Items))}>{`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}</Button>
         </div>
       </DialogContent>

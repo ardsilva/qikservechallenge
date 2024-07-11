@@ -24,7 +24,8 @@ const mockCart: Items =
   }
 
 const mockState = {
-  venue: { currency: '$' },
+  menuItems: [],
+  venue: { currency: '$', webSettings: { primaryColour: '#aaa'} },
 };
 
 test('Cart renders items and handles add/remove', () => {
@@ -48,12 +49,12 @@ test('Cart renders items and handles add/remove', () => {
   expect(itemElement).toBeDefined();
 
   // Simular clique no botão de adicionar
-  const addButton = screen.getByText('+');
+  const addButton = screen.getByTestId('plus');
   fireEvent.click(addButton);
   expect(addToCartMock).toHaveBeenCalledWith(expect.objectContaining({ id: 1, name: 'Cheeseburger' }));
 
   // Simular clique no botão de remover
-  const removeButton = screen.getByText('-');
+  const removeButton = screen.getByTestId('minus');
   fireEvent.click(removeButton);
   expect(removeFromCartMock).toHaveBeenCalledWith(expect.objectContaining({ id: 1, name: 'Cheeseburger' }));
 });
