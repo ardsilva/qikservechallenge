@@ -3,7 +3,10 @@ import axios from 'axios';
 import { Sections, Venue } from "./types";
 import { Header } from "@/components/Header";
 import { useAppContext } from "@/context/AppContext";
-import Component from "./components/Component";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Menu from '@/pages/Menu';
+import Login from '@/pages/Login';
+import Contact from '@/pages/Contact';
 
 export function App() {
   const [loadingMenu, setLoadingMenu] = useState<boolean>(true);
@@ -64,10 +67,14 @@ export function App() {
 
 
   return (
-    <>
+    <Router>
       <Header />
-      <Component />
-    </>
+      <Routes>
+        <Route path="/" element={<Menu />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+    </Router>
   )
 }
 
