@@ -21,7 +21,7 @@ export default function Cart({
   subtotal,
   total
 }: CartProps) {
-  const primaryColor = state.venue?.webSettings?.primaryColour || '#a2f';
+  const primaryColor = state.venue?.webSettings?.primaryColour || '';
   return (
     <div className="w-72 ml-8">
       <Card>

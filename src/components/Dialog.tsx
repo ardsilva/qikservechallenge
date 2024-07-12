@@ -18,15 +18,16 @@ import { MinusIcon, PlusIcon } from 'lucide-react';
 interface DialogProps {
   showDialog: boolean;
   setShowDialog: (open: boolean) => void;
-  modifiers: Items | undefined;
+  modifiers?: Items | undefined;
   selectedValue: string;
   setSelectedValue: (value: string) => void;
   meatQuantity: number;
   setMeatQuantity: (arg0: Items | number) => void;
   handleAddToCart: (item: Items) => void;
+  children?: React.ReactNode;
 }
 
-export default function Dialog({ 
+export default function Dialog({
   showDialog,
   setShowDialog,
   modifiers,
@@ -35,11 +36,12 @@ export default function Dialog({
   meatQuantity,
   setMeatQuantity,
   handleAddToCart,
+  children,
 }: DialogProps) {
   const { state } = useAppContext();
 
-  const currency:string | undefined = state.venue?.currency;
-  const primaryColor:string | undefined = state.venue?.webSettings?.primaryColour;
+  const currency: string | undefined = state.venue?.currency;
+  const primaryColor: string | undefined = state.venue?.webSettings?.primaryColour;
 
   const [itemSelected, setItemSelected] = useState<ModifiersItems>();
 
@@ -52,8 +54,8 @@ export default function Dialog({
     handleAddToCart(newItem);
   }
 
-  function getPrice(modifierPrice: number | undefined, meatQuantity: number, currency: string){
-    if(modifierPrice && modifierPrice > 0) {
+  function getPrice(modifierPrice: number | undefined, meatQuantity: number, currency: string) {
+    if (modifierPrice && modifierPrice > 0) {
       return `${currency}${modifierPrice * meatQuantity}`
     }
     return '';
@@ -62,49 +64,56 @@ export default function Dialog({
   return (
     <DialogComponent open={showDialog} onOpenChange={setShowDialog}>
       <DialogContent className="sm:max-w-[350px]">
-        <img src={modifiers?.images[0].image} alt={modifiers?.name} />
-        <DialogHeader>
-          <DialogTitle>{modifiers?.name}</DialogTitle>
-          <DialogDescription>{modifiers?.description}</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {modifiers?.modifiers?.map(it => it.items).flat().map(modifierItem => {
-            const id = String(modifierItem.id);
-            return (
-              <RadioGroup
-                key={id}
-                value={selectedValue}
-                onValueChange={(value) => {setItemSelected(modifierItem); setSelectedValue(value);}}>
+        {modifiers ? (
+          <>
+            <img src={modifiers?.images[0].image} alt={modifiers?.name} />
+            <DialogHeader>
+              <DialogTitle>{modifiers?.name}</DialogTitle>
+              <DialogDescription>{modifiers?.description}</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {modifiers?.modifiers?.map(it => it.items).flat().map(modifierItem => {
+                const id = String(modifierItem.id);
+                return (
+                  <RadioGroup
+                    key={id}
+                    value={selectedValue}
+                    onValueChange={(value) => { setItemSelected(modifierItem); setSelectedValue(value); }}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={id} id={id} />
+                      <Label htmlFor={id}>{modifierItem.name} - {currency}{modifierItem.price}</Label>
+                    </div>
+                  </RadioGroup>
+                );
+              })}
+              <div className="grid grid-cols-[1fr_auto] items-center gap-4">
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value={id} id={id} />
-                  <Label htmlFor={id}>{modifierItem.name} - {currency}{modifierItem.price}</Label>
+                  <QuantityButton
+                    handleClick={setMeatQuantity}
+                    icon={<MinusIcon />}
+                    item={meatQuantity - 1}
+                    primaryColor={primaryColor}
+                    disabled={itemSelected?.maxChoices === meatQuantity}
+                  />
+                  <span>{meatQuantity}</span>
+                  <QuantityButton
+                    handleClick={setMeatQuantity}
+                    icon={<PlusIcon />}
+                    item={meatQuantity + 1}
+                    primaryColor={primaryColor}
+                    disabled={itemSelected?.maxChoices === meatQuantity}
+                  />
                 </div>
-              </RadioGroup>
-            );
-          })}
-          <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <QuantityButton
-                handleClick={setMeatQuantity}
-                icon={<MinusIcon />}
-                item={meatQuantity - 1}
-                primaryColor={primaryColor}
-                disabled={itemSelected?.maxChoices === meatQuantity}
-              />
-              <span>{meatQuantity}</span>
-              <QuantityButton
-                handleClick={setMeatQuantity}
-                icon={<PlusIcon />}
-                item={meatQuantity + 1}
-                primaryColor={primaryColor}
-                disabled={itemSelected?.maxChoices === meatQuantity}
-              />
+              </div>
+              <Button
+                style={{ backgroundColor: primaryColor }}
+                onClick={() => addOrder(handleAddToCart, (modifiers as Items))}>{`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}
+              </Button>
             </div>
-          </div>
-          <Button
-            style={{ backgroundColor: primaryColor }}
-            onClick={() => addOrder(handleAddToCart, (modifiers as Items))}>{`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}</Button>
-        </div>
+          </>
+        ) : (
+          children
+        )}
       </DialogContent>
     </DialogComponent>
   );

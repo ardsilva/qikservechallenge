@@ -6,6 +6,7 @@ import CategoryList from "@/components/CategoryList";
 import ItemList from "@/components/ItemList";
 import Cart from "@/components/Cart";
 import Dialog from "@/components/Dialog";
+import { Button } from "@/components/ui/button";
 
 export default function Component() {
   const { state } = useAppContext();
@@ -14,6 +15,7 @@ export default function Component() {
   const [subtotal, setSubtotal] = useState(0)
   const [total, setTotal] = useState(0)
   const [showDialog, setShowDialog] = useState(false)
+  const [showCartDialog, setShowCartDialog] = useState(false);
   const [meatQuantity, setMeatQuantity] = useState<number>(1)
   const [modifiers, setModifiers] = useState<Items>();
   const [search, setSearch] = useState('');
@@ -48,47 +50,43 @@ export default function Component() {
   const handleQuantity = (item: Items | number) => {
     if (typeof item === 'number') {
       setMeatQuantity(item);
-    } else {
-      return null;
     }
   }
 
   const addToCart = (item: Items | number) => {
     if (typeof item === 'number') {
       return null;
-    } else {
-      setCart((prevCart) => {
-        const existingItem = prevCart.find((i) => i.id === item.id);
-        let updatedCart;
-
-        if (existingItem) {
-          updatedCart = prevCart.map((i) =>
-            i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-          );
-        } else {
-          updatedCart = [...prevCart, { ...item, quantity: 1 }];
-        }
-
-        updateSubtotalAndTotal(updatedCart);
-        handleAddToCart();
-        return updatedCart;
-      });
     }
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((i) => i.id === item.id);
+      let updatedCart;
+
+      if (existingItem) {
+        updatedCart = prevCart.map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      } else {
+        updatedCart = [...prevCart, { ...item, quantity: 1 }];
+      }
+
+      updateSubtotalAndTotal(updatedCart);
+      handleAddToCart();
+      return updatedCart;
+    });
   };
 
   const removeFromCart = (item: Items | number) => {
     if (typeof item === 'number') {
       return null;
-    } else {
-      setCart((prevCart) => {
-        const updatedCart = prevCart
-          .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
-          .filter((i) => i.quantity > 0);
-
-        updateSubtotalAndTotal(updatedCart);
-        return updatedCart;
-      });
     }
+    setCart((prevCart) => {
+      const updatedCart = prevCart
+        .map((i) => (i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i))
+        .filter((i) => i.quantity > 0);
+
+      updateSubtotalAndTotal(updatedCart);
+      return updatedCart;
+    });
   };
 
   const updateSubtotalAndTotal = (cart: CartType[]) => {
@@ -138,6 +136,35 @@ export default function Component() {
             handleAvatarClick={handleAvatarClick}
           />
         </div>
+        <div className="hidden lg:block">
+          <Cart
+            cart={cart}
+            state={state}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+            subtotal={subtotal}
+            total={total}
+          />
+        </div>
+        {cart?.length ? (<div className="lg:hidden fixed bottom-4 right-4">
+          <Button
+            style={{ backgroundColor: webSettings.primaryColour }}
+            onClick={() => setShowCartDialog(true)}
+          >
+            {`Your basket - ${cart?.length}`}
+          </Button>
+        </div>): ''} 
+      </div>
+      <Dialog
+        showDialog={showCartDialog}
+        setShowDialog={setShowCartDialog}
+        modifiers={undefined}
+        selectedValue={selectedValue}
+        setSelectedValue={setSelectedValue}
+        meatQuantity={meatQuantity}
+        setMeatQuantity={handleQuantity}
+        handleAddToCart={addToCart}
+      >
         <Cart
           cart={cart}
           state={state}
@@ -146,7 +173,7 @@ export default function Component() {
           subtotal={subtotal}
           total={total}
         />
-      </div>
+      </Dialog>
       <Dialog
         showDialog={showDialog}
         setShowDialog={setShowDialog}
