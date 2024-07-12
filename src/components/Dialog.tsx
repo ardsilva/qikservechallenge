@@ -93,7 +93,7 @@ export default function Dialog({
                     icon={<MinusIcon />}
                     item={meatQuantity - 1}
                     primaryColor={primaryColor}
-                    disabled={itemSelected?.maxChoices === meatQuantity}
+                    disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
                   />
                   <span>{meatQuantity}</span>
                   <QuantityButton
@@ -101,13 +101,15 @@ export default function Dialog({
                     icon={<PlusIcon />}
                     item={meatQuantity + 1}
                     primaryColor={primaryColor}
-                    disabled={itemSelected?.maxChoices === meatQuantity}
+                    disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
                   />
                 </div>
               </div>
               <Button
                 style={{ backgroundColor: primaryColor }}
-                onClick={() => addOrder(handleAddToCart, (modifiers as Items))}>{`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}
+                onClick={() => addOrder(handleAddToCart, (modifiers as Items))}
+                disabled={!selectedValue}>
+                  {`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}
               </Button>
             </div>
           </>

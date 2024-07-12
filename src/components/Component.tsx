@@ -146,12 +146,13 @@ export default function Component() {
             total={total}
           />
         </div>
-        {cart?.length ? (<div className="lg:hidden fixed bottom-4 right-4">
+        {cart?.length ? (<div className="lg:hidden fixed bottom-4 right-4 left-4">
           <Button
+            className="w-full"
             style={{ backgroundColor: webSettings.primaryColour }}
             onClick={() => setShowCartDialog(true)}
           >
-            {`Your basket - ${cart?.length}`}
+            {`Your basket - ${cart?.length} item(s)`}
           </Button>
         </div>): ''} 
       </div>
@@ -173,6 +174,15 @@ export default function Component() {
           subtotal={subtotal}
           total={total}
         />
+        <div className="lg:hidden fixed bottom-4 right-4 left-4">
+          <Button
+            className="w-full"
+            style={{ backgroundColor: webSettings.primaryColour }}
+            onClick={() => setShowCartDialog(false)}
+          >
+            {`Checkout now`}
+          </Button>
+        </div>
       </Dialog>
       <Dialog
         showDialog={showDialog}

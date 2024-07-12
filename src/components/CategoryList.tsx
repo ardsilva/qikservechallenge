@@ -51,7 +51,7 @@ export default function CategoryList({ state, activeCategory, handleAvatarClick,
                 <AvatarFallback>AF</AvatarFallback>
               </Avatar>
             </div>
-            <p className={`${activeCategory === lowerName ? 'font-bold border-gray-800 underline' : ''}`}>
+            <p className={`${activeCategory === lowerName ? 'font-bold border-gray-800 underline' : ''} mt-6`}>
               {avatar.name}
             </p>
           </div>
