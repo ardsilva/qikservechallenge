@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CustomCSSProperties extends CSSProperties {
   '--tw-ring-shadow'?: string;
@@ -19,6 +20,7 @@ interface CategoryListProps {
 }
 
 export default function CategoryList({ state, activeCategory, handleAvatarClick, webSettings }: CategoryListProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center mb-4 space-x-4 gap-6">
       {state.menuItems.map(avatar => {
@@ -52,7 +54,7 @@ export default function CategoryList({ state, activeCategory, handleAvatarClick,
               </Avatar>
             </div>
             <p className={`${activeCategory === lowerName ? 'font-bold border-gray-800 underline' : ''} mt-6`}>
-              {avatar.name}
+              {t(`${avatar.name}`)}
             </p>
           </div>
         );

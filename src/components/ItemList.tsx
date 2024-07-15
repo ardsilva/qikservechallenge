@@ -1,5 +1,6 @@
 import { ChevronUp } from 'lucide-react';
 import { Items, ModifiersItems, State } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ItemListProps {
   state: State;
@@ -22,6 +23,7 @@ export default function ItemList({
   webSettings,
   handleAvatarClick
 }: ItemListProps) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
       {state.menuItems.map(menuSection => {
@@ -30,7 +32,7 @@ export default function ItemList({
         return (
           <div key={menuSection.id} onClick={() => handleAvatarClick(lowerName)}>
             <div className="flex justify-between items-center mb-2 cursor-pointer">
-              <h2 className="text-lg font-semibold">{menuSection.name}</h2>
+              <h2 className="text-lg font-semibold">{t(`${menuSection.name}`)}</h2>
               <ChevronUp
                 className={`h-5 w-5 text-gray-400 transition-transform ${isActive ? '' : 'rotate-180'}`} />
             </div>

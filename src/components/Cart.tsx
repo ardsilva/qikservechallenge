@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Items, State } from '@/types';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import QuantityButton from './QuantityButton';
+import { useTranslation } from 'react-i18next';
 
 
 interface CartProps {
@@ -22,15 +23,16 @@ export default function Cart({
   total
 }: CartProps) {
   const primaryColor = state.venue?.webSettings?.primaryColour || '';
+  const { t } = useTranslation();
   return (
     <div className="w-72 ml-8">
       <Card>
         <CardHeader className="bg-[#F8F9FA]">
-          <CardTitle>Carrinho</CardTitle>
+          <CardTitle>{t('Carrinho')}</CardTitle>
         </CardHeader>
         {cart.length === 0 ? (
           <CardContent>
-            <p>Seu carrinho está vazio</p>
+            <p>{t('Seu carrinho está vazio')}</p>
           </CardContent>
         ) : (
           <div className="space-y-4">

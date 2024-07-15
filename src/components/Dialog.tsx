@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import QuantityButton from './QuantityButton';
 import { MinusIcon, PlusIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 
 interface DialogProps {
@@ -39,6 +40,7 @@ export default function Dialog({
   children,
 }: DialogProps) {
   const { state } = useAppContext();
+  const { t } = useTranslation();
 
   const currency: string | undefined = state.venue?.currency;
   const primaryColor: string | undefined = state.venue?.webSettings?.primaryColour;
@@ -56,7 +58,7 @@ export default function Dialog({
 
   function getPrice(modifierPrice: number | undefined, meatQuantity: number, currency: string) {
     if (modifierPrice && modifierPrice > 0) {
-      return `${currency}${modifierPrice * meatQuantity}`
+      return `${t(currency)}${modifierPrice * meatQuantity}`
     }
     return '';
   }
@@ -81,7 +83,7 @@ export default function Dialog({
                     onValueChange={(value) => { setItemSelected(modifierItem); setSelectedValue(value); }}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value={id} id={id} />
-                      <Label htmlFor={id}>{modifierItem.name} - {currency}{modifierItem.price}</Label>
+                      <Label htmlFor={id}>{`${t(modifierItem.name)} - ${t(currency as string)}${modifierItem.price}`}</Label>
                     </div>
                   </RadioGroup>
                 );
