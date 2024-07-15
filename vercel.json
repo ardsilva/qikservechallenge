@@ -1,10 +1,4 @@
 {
-  "routes": [
-    {
-      "src": "/locales/(.*)",
-      "dest": "/src/locales/$1"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/:path*",
