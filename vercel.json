@@ -11,8 +11,8 @@
       "destination": "https://cdn-dev.preoday.com/:path*"
     },
     {
-      "source": "/locales/:lng/:ns",
-      "destination": "/src/locales/:lng/:ns"
+      "source": "/locales/:lng/:lng",
+      "destination": "/src/locales/:lng/:lng"
     }
   ],
   "headers": [
