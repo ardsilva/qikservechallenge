@@ -69,7 +69,7 @@ src/
 Clone the repository
 ```bash
 git clone https://github.com/ardsilva/qikservechallenge.git
-cd repository
+cd qikservechallenge
 ```
 
 Install dependencies
