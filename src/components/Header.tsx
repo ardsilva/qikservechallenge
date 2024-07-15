@@ -28,7 +28,7 @@ export function Header() {
         <NavLink to="/contact" style={({ isActive }) => isActive ? { ...linkStyle, ...activeLinkStyle } : linkStyle}>{t('CONTATO')}</NavLink>
       </header>
       <img
-        className="h-auto w-full"
+        className="h-28 w-full object-cover"
         src={`${state.venue?.webSettings?.bannerImage}`}
         alt=""
       />

@@ -65,60 +65,62 @@ export default function Dialog({
 
   return (
     <DialogComponent open={showDialog} onOpenChange={setShowDialog}>
-      <DialogContent className="sm:max-w-[350px]">
-        {modifiers ? (
-          <>
-            <img src={modifiers?.images[0].image} alt={modifiers?.name} />
-            <DialogHeader>
-              <DialogTitle>{modifiers?.name}</DialogTitle>
-              <DialogDescription>{modifiers?.description}</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              {modifiers?.modifiers?.map(it => it.items).flat().map(modifierItem => {
-                const id = String(modifierItem.id);
-                return (
-                  <RadioGroup
-                    key={id}
-                    value={selectedValue}
-                    onValueChange={(value) => { setItemSelected(modifierItem); setSelectedValue(value); }}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={id} id={id} />
-                      <Label htmlFor={id}>{`${t(modifierItem.name)} - ${t(currency as string)}${modifierItem.price}`}</Label>
-                    </div>
-                  </RadioGroup>
-                );
-              })}
-              <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-                <div className="flex items-center space-x-2">
-                  <QuantityButton
-                    handleClick={setMeatQuantity}
-                    icon={<MinusIcon />}
-                    item={meatQuantity - 1}
-                    primaryColor={primaryColor}
-                    disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
-                  />
-                  <span>{meatQuantity}</span>
-                  <QuantityButton
-                    handleClick={setMeatQuantity}
-                    icon={<PlusIcon />}
-                    item={meatQuantity + 1}
-                    primaryColor={primaryColor}
-                    disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
-                  />
-                </div>
+      {modifiers ? (
+        <DialogContent className="sm:max-w-[350px]">
+          <img src={modifiers?.images[0].image} alt={modifiers?.name} />
+          <DialogHeader>
+            <DialogTitle>{modifiers?.name}</DialogTitle>
+            <DialogDescription>{modifiers?.description}</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {modifiers?.modifiers?.map(it => it.items).flat().map(modifierItem => {
+              const id = String(modifierItem.id);
+              return (
+                <RadioGroup
+                  key={id}
+                  value={selectedValue}
+                  onValueChange={(value) => { setItemSelected(modifierItem); setSelectedValue(value); }}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={id} id={id} />
+                    <Label htmlFor={id}>{`${t(modifierItem.name)} - ${t(currency as string)}${modifierItem.price}`}</Label>
+                  </div>
+                </RadioGroup>
+              );
+            })}
+            <div className="grid grid-cols-[1fr_auto] items-center gap-4">
+              <div className="flex items-center space-x-2">
+                <QuantityButton
+                  handleClick={setMeatQuantity}
+                  icon={<MinusIcon />}
+                  item={meatQuantity - 1}
+                  primaryColor={primaryColor}
+                  disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
+                />
+                <span>{meatQuantity}</span>
+                <QuantityButton
+                  handleClick={setMeatQuantity}
+                  icon={<PlusIcon />}
+                  item={meatQuantity + 1}
+                  primaryColor={primaryColor}
+                  disabled={!selectedValue || itemSelected?.maxChoices === meatQuantity}
+                />
               </div>
-              <Button
-                style={{ backgroundColor: primaryColor }}
-                onClick={() => addOrder(handleAddToCart, (modifiers as Items))}
-                disabled={!selectedValue}>
-                  {`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}
-              </Button>
             </div>
-          </>
-        ) : (
-          children
-        )}
-      </DialogContent>
+            <Button
+              style={{ backgroundColor: primaryColor }}
+              onClick={() => addOrder(handleAddToCart, (modifiers as Items))}
+              disabled={!selectedValue}>
+              {`Add to order - ${getPrice(itemSelected?.price, meatQuantity, (currency as string))}`}
+            </Button>
+          </div>
+        </DialogContent>
+      ) : (
+        <div className='h-full'>
+          <DialogContent className="sm:max-w-[350px] h-full">
+            {children}
+          </DialogContent>
+        </div>
+      )}
     </DialogComponent>
   );
 }

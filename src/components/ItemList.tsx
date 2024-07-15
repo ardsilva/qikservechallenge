@@ -52,7 +52,7 @@ export default function ItemList({
                         <h3 className="font-semibold">{item.name}</h3>
                       </div>
                       <p>{item.description}</p>
-                      <p className="font-bold">{state.venue?.currency}{item.price.toFixed(2)}</p>
+                      <p className="font-bold">{`${t(state.venue?.currency as string)}${item.price.toFixed(2)}`}</p>
                     </div>
                     {item.images && <img src={item.images[0].image} alt={item.name} className="w-16 h-16 rounded-md" />}
                   </div>

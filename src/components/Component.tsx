@@ -7,8 +7,10 @@ import ItemList from "@/components/ItemList";
 import Cart from "@/components/Cart";
 import Dialog from "@/components/Dialog";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function Component() {
+  const { t } = useTranslation();
   const { state } = useAppContext();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<CartType[]>([])
@@ -30,6 +32,9 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
+    if (cart.length <= 0) {
+      setShowCartDialog(false);
+    }
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
@@ -92,7 +97,7 @@ export default function Component() {
   const updateSubtotalAndTotal = (cart: CartType[]) => {
     const newSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     setSubtotal(newSubtotal);
-    setTotal(newSubtotal); // Assumindo que total é igual a subtotal, ajuste se necessário
+    setTotal(newSubtotal);
   };
 
   const handleAddToCart = () => {
@@ -152,7 +157,7 @@ export default function Component() {
             style={{ backgroundColor: webSettings.primaryColour }}
             onClick={() => setShowCartDialog(true)}
           >
-            {`Your basket - ${cart?.length} item(s)`}
+            {`${t('Your basket')} - ${cart?.length} item(s)`}
           </Button>
         </div>): ''} 
       </div>
@@ -180,7 +185,7 @@ export default function Component() {
             style={{ backgroundColor: webSettings.primaryColour }}
             onClick={() => setShowCartDialog(false)}
           >
-            {`Checkout now`}
+            {t(`Checkout now`)}
           </Button>
         </div>
       </Dialog>

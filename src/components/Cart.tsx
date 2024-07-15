@@ -24,6 +24,7 @@ export default function Cart({
 }: CartProps) {
   const primaryColor = state.venue?.webSettings?.primaryColour || '';
   const { t } = useTranslation();
+  const translatedCurrency = `${t(state.venue?.currency as string)}`;
   return (
     <div className="w-72 ml-8">
       <Card>
@@ -41,7 +42,7 @@ export default function Cart({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold">{item.name}</h3>
-                    <p className="font-bold">{state.venue?.currency}{item.price?.toFixed(2)}</p>
+                    <p className="font-bold">{translatedCurrency}{item.price?.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <QuantityButton
@@ -64,11 +65,11 @@ export default function Cart({
             <div>
               <CardHeader className="bg-[#F8F9FA] border-b">
                 <CardTitle>Subtotal</CardTitle>
-                <p>{state.venue?.currency}{subtotal.toFixed(2)}</p>
+                <p>{translatedCurrency}{subtotal.toFixed(2)}</p>
               </CardHeader>
               <CardHeader className="bg-[#F8F9FA]">
                 <CardTitle>Total</CardTitle>
-                <p>{state.venue?.currency}{total.toFixed(2)}</p>
+                <p>{translatedCurrency}{total.toFixed(2)}</p>
               </CardHeader>
             </div>
           </div>
