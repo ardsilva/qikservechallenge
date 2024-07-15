@@ -1,8 +1,18 @@
 {
+  "routes": [
+    {
+      "src": "/locales/(.*)",
+      "dest": "/src/locales/$1"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://cdn-dev.preoday.com/:path*"
+    },
+    {
+      "source": "/locales/:lng/:ns",
+      "destination": "/src/locales/:lng/:ns"
     }
   ],
   "headers": [

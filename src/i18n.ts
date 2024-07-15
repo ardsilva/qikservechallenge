@@ -3,6 +3,8 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 i18n
   .use(HttpApi)
   .use(LanguageDetector)
@@ -13,7 +15,7 @@ i18n
       escapeValue: false // react already safes from xss
     },
     backend: {
-      loadPath: 'src/locales/{{lng}}/{{lng}}.json'
+      loadPath: isProduction ? '/locales/{{lng}}/{{lng}}.json' : 'src/locales/{{lng}}/{{lng}}.json'
     }
   });
 
