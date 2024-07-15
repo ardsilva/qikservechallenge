@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://cdn-dev.preoday.com/:path*"
+      "source": "/locales/:lng/:lng*",
+      "destination": "src/locales/:lng/:lng*"
     },
     {
-      "source": "/locales/:lng/:lng",
-      "destination": "src/locales/:lng/:lng"
+      "source": "/api/:path*",
+      "destination": "https://cdn-dev.preoday.com/:path*"
     }
   ],
   "headers": [
