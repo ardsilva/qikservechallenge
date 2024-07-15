@@ -62,35 +62,29 @@ src/
 
 ### Prerequisites
 - Node.js (version 14 or higher)
-- npm or yarn
+- npm
 
 ### Installation
 
 Clone the repository
 ```bash
-git clone https://github.com/username/repository.git
+git clone https://github.com/ardsilva/qikservechallenge.git
 cd repository
 ```
 
 Install dependencies
 ```bash
 npm install
-# or
-yarn install
 ```
 
 Run the application
 ```bash
-npm start
-# or
-yarn start
+npm run dev
 ```
 
 Run tests
 ```bash
 npm test
-# or
-yarn test
 ```
 
 ## 🛠️ **Usage**
@@ -98,6 +92,7 @@ yarn test
 - Search for items using the search bar.
 - Customize items by selecting modifiers in the dialog.
 - Add items to the cart and adjust quantities directly from the cart.
+- Select language (i18n) by clicking in flags.
 
 ## 🧪 **Running Tests**
 We use Vitest and React Testing Library for unit tests. 
@@ -105,8 +100,6 @@ The tests cover component rendering, user interactions, and state updates.
 
 ```bash
 npm test
-# or
-yarn test
 ```
 
 ## 📝 **Contributing**
@@ -117,7 +110,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🎉 **Acknowledgements**
 - Icons: Lucide Icons
-- GIF: Giphy
-- Libraries: React, Tailwind CSS
 
 Thank you for visiting! If you like this project, please ⭐ star the repository to show your support!
