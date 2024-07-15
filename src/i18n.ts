@@ -12,10 +12,10 @@ i18n
   .init({
     fallbackLng: 'pt',
     interpolation: {
-      escapeValue: false // react already safes from xss
+      escapeValue: false
     },
     backend: {
-      loadPath: isProduction ? '/locales/{{lng}}/{{lng}}.json' : 'src/locales/{{lng}}/{{lng}}.json'
+      loadPath: 'locales/{{lng}}/{{lng}}.json'
     }
   });
 
