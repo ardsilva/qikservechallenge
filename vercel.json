@@ -6,7 +6,7 @@
     },
     {
       "source": "/locales/:lng/:lng",
-      "destination": "/src/locales/:lng/:lng"
+      "destination": "src/locales/:lng/:lng"
     }
   ],
   "headers": [
